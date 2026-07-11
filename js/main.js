@@ -42,6 +42,54 @@
         color: var(--blue-950) !important;
       }
 
+      .quote-panel {
+        min-height: 330px;
+        justify-content: center !important;
+        gap: 18px;
+        background: linear-gradient(135deg, rgba(5,25,69,.98), rgba(8,47,125,.94)) !important;
+      }
+
+      .quote-panel strong {
+        max-width: 420px;
+      }
+
+      .quote-panel p {
+        max-width: 420px;
+        font-size: 18px;
+      }
+
+      .quote-points {
+        list-style: none;
+        margin: 4px 0 0;
+        padding: 0;
+        display: grid;
+        gap: 10px;
+      }
+
+      .quote-points li {
+        position: relative;
+        padding-left: 28px;
+        color: rgba(255,255,255,.9);
+        font-weight: 760;
+        line-height: 1.35;
+      }
+
+      .quote-points li:before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: var(--yellow);
+        color: var(--blue-950);
+        font-size: 12px;
+        font-weight: 950;
+      }
+
       @media (max-width:820px) {
         .site-menu > a.active,
         .menu-dropdown.is-current > .menu-dropdown-toggle {
@@ -52,6 +100,20 @@
       }
     `;
     document.head.appendChild(style);
+  }
+
+  function enhanceQuotePanel() {
+    const quotePanel = document.querySelector('.quote-panel');
+    if (!quotePanel || quotePanel.querySelector('.quote-points')) return;
+
+    const points = document.createElement('ul');
+    points.className = 'quote-points';
+    points.innerHTML = `
+      <li>Experiência real no setor lotérico.</li>
+      <li>Produto focado na rotina da Casa Lotérica.</li>
+      <li>Evolução contínua com suporte próximo.</li>
+    `;
+    quotePanel.appendChild(points);
   }
 
   function showToast(message) {
@@ -138,6 +200,7 @@
   }
 
   applyMenuStyleFix();
+  enhanceQuotePanel();
 
   if (menuToggle && menu) {
     menuToggle.addEventListener('click', () => {

@@ -8,6 +8,39 @@
   const toast = document.querySelector('.toast');
   const form = document.querySelector('#leadForm');
 
+  function applyMenuStyleFix() {
+    if (document.querySelector('#sgcl-menu-active-fix')) return;
+    const style = document.createElement('style');
+    style.id = 'sgcl-menu-active-fix';
+    style.textContent = `
+      .site-menu > a.active:after {
+        display: none !important;
+        content: none !important;
+      }
+
+      .site-menu > a.active,
+      .menu-dropdown-toggle.active,
+      .menu-dropdown.is-current > .menu-dropdown-toggle {
+        box-shadow: inset 0 -3px 0 var(--yellow);
+      }
+
+      .menu-dropdown-panel a.active {
+        background: rgba(255,196,0,.14);
+        color: var(--blue-950) !important;
+      }
+
+      @media (max-width:820px) {
+        .site-menu > a.active,
+        .menu-dropdown-toggle.active,
+        .menu-dropdown.is-current > .menu-dropdown-toggle {
+          box-shadow: none;
+          color: var(--yellow);
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
   function showToast(message) {
     if (!toast) return;
     toast.textContent = message;
@@ -23,6 +56,13 @@
     }
   }
 
+  function closeMobileMenu() {
+    if (menu && menuToggle) {
+      menu.classList.remove('open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+      menuToggle.setAttribute('aria-label', 'Abrir menu');
+    }
+  }
 
   function scrollToTarget(hash) {
     const target = document.querySelector(hash);
@@ -35,16 +75,50 @@
 
     window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
     history.pushState(null, '', hash);
+    updateActiveLink(hash);
     return true;
   }
 
-  function closeMobileMenu() {
-    if (menu && menuToggle) {
-      menu.classList.remove('open');
-      menuToggle.setAttribute('aria-expanded', 'false');
-      menuToggle.setAttribute('aria-label', 'Abrir menu');
-    }
+  function setDropdownState(current) {
+    if (!dropdown || !dropdownToggle) return;
+    const inProducts = ['#recursos', '#demonstracao'].includes(current);
+    dropdown.classList.toggle('is-current', inProducts);
+    dropdownToggle.classList.toggle('active', inProducts);
+    document.querySelectorAll('.menu-dropdown-panel a[href^="#"]').forEach((link) => {
+      link.classList.toggle('active', link.getAttribute('href') === current);
+    });
   }
+
+  function updateActiveLink(forcedHash) {
+    const currentY = window.scrollY + 130;
+    const sectionIds = Array.from(new Set([
+      '#inicio',
+      '#sobre',
+      '#recursos',
+      '#demonstracao',
+      '#indicacao',
+      '#contato'
+    ]));
+
+    let current = forcedHash || '#inicio';
+
+    if (!forcedHash) {
+      sectionIds.forEach((id) => {
+        const section = document.querySelector(id);
+        if (section && section.offsetTop <= currentY) current = id;
+      });
+    }
+
+    document.querySelectorAll('.site-menu > a[href^="#"]').forEach((link) => {
+      link.classList.toggle('active', link.getAttribute('href') === current);
+    });
+
+    setDropdownState(current);
+
+    if (backToTop) backToTop.classList.toggle('visible', window.scrollY > 560);
+  }
+
+  applyMenuStyleFix();
 
   if (menuToggle && menu) {
     menuToggle.addEventListener('click', () => {
@@ -90,7 +164,6 @@
     });
   });
 
-
   document.querySelectorAll('a[href^="#"]:not(.site-menu a)').forEach((link) => {
     link.addEventListener('click', (event) => {
       const hash = link.getAttribute('href');
@@ -101,38 +174,14 @@
     });
   });
 
-  const sectionIds = Array.from(new Set(
-    headerLinks.map((link) => link.getAttribute('href')).filter(Boolean)
-  ));
-  const sections = sectionIds.map((id) => document.querySelector(id)).filter(Boolean);
-
-  function updateActiveLink() {
-    const currentY = window.scrollY + 130;
-    let current = '#inicio';
-
-    sections.forEach((section) => {
-      if (section.offsetTop <= currentY) current = `#${section.id}`;
-    });
-
-    headerLinks.forEach((link) => {
-      link.classList.toggle('active', link.getAttribute('href') === current);
-    });
-
-    if (dropdown && dropdownToggle) {
-      const inProducts = ['#recursos', '#demonstracao'].includes(current);
-      dropdown.classList.toggle('is-current', inProducts);
-      dropdownToggle.classList.toggle('active', inProducts);
-    }
-
-    if (backToTop) backToTop.classList.toggle('visible', window.scrollY > 560);
-  }
-
-  window.addEventListener('scroll', updateActiveLink, { passive: true });
+  window.addEventListener('scroll', () => updateActiveLink(), { passive: true });
   window.addEventListener('resize', () => {
     closeDropdown();
     if (window.innerWidth > 820) closeMobileMenu();
+    updateActiveLink();
   });
-  updateActiveLink();
+  window.addEventListener('hashchange', () => updateActiveLink(window.location.hash || '#inicio'));
+  updateActiveLink(window.location.hash || '#inicio');
 
   if (backToTop) {
     backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
@@ -205,49 +254,3 @@
     });
   }
 })();
-
-
-// Revisão final - sincronização segura do menu ativo
-(function () {
-  const menuLinks = Array.from(document.querySelectorAll('.site-menu > a[href^="#"]'));
-  const productToggle = document.querySelector('.menu-dropdown-toggle');
-
-  function clearActive() {
-    document.querySelectorAll('.site-menu a.active, .menu-dropdown-toggle.active').forEach((el) => {
-      el.classList.remove('active');
-    });
-  }
-
-  function setActiveByHash(hash) {
-    clearActive();
-
-    if (hash === '#recursos' || hash === '#demonstracao') {
-      if (productToggle) productToggle.classList.add('active');
-      return;
-    }
-
-    const link = menuLinks.find((item) => item.getAttribute('href') === hash);
-    if (link) {
-      link.classList.add('active');
-      return;
-    }
-
-    const home = menuLinks.find((item) => item.getAttribute('href') === '#inicio');
-    if (home) home.classList.add('active');
-  }
-
-  menuLinks.forEach((link) => {
-    link.addEventListener('click', () => {
-      setTimeout(() => setActiveByHash(link.getAttribute('href')), 80);
-    });
-  });
-
-  document.querySelectorAll('.menu-dropdown-panel a[href^="#"]').forEach((link) => {
-    link.addEventListener('click', () => {
-      setTimeout(() => setActiveByHash(link.getAttribute('href')), 80);
-    });
-  });
-
-  window.addEventListener('hashchange', () => setActiveByHash(window.location.hash || '#inicio'));
-})();
-

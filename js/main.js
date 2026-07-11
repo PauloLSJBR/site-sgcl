@@ -79,41 +79,47 @@
     return true;
   }
 
-  function setDropdownState(current) {
-    if (!dropdown || !dropdownToggle) return;
-    const inProducts = ['#recursos', '#demonstracao'].includes(current);
-    dropdown.classList.toggle('is-current', inProducts);
-    dropdownToggle.classList.toggle('active', inProducts);
-    document.querySelectorAll('.menu-dropdown-panel a[href^="#"]').forEach((link) => {
-      link.classList.toggle('active', link.getAttribute('href') === current);
-    });
+  function clearMenuState() {
+    document.querySelectorAll('.site-menu > a[href^="#"]').forEach((link) => link.classList.remove('active'));
+    document.querySelectorAll('.menu-dropdown-panel a[href^="#"]').forEach((link) => link.classList.remove('active'));
+    if (dropdown) dropdown.classList.remove('is-current');
+    if (dropdownToggle) dropdownToggle.classList.remove('active');
+  }
+
+  function setActiveMenu(current) {
+    clearMenuState();
+
+    if (current === '#recursos' || current === '#demonstracao') {
+      if (dropdown) dropdown.classList.add('is-current');
+      if (dropdownToggle) dropdownToggle.classList.add('active');
+      const subLink = document.querySelector(`.menu-dropdown-panel a[href="${current}"]`);
+      if (subLink) subLink.classList.add('active');
+      return;
+    }
+
+    const topLink = document.querySelector(`.site-menu > a[href="${current}"]`);
+    if (topLink) topLink.classList.add('active');
+  }
+
+  function getCurrentSectionByPosition() {
+    const header = document.querySelector('.site-header');
+    const headerHeight = header ? header.offsetHeight : 0;
+    const currentY = window.scrollY + headerHeight + 42;
+    const sectionIds = ['#inicio', '#recursos', '#sobre', '#indicacao', '#demonstracao', '#contato'];
+
+    return sectionIds
+      .map((id) => ({ id, element: document.querySelector(id) }))
+      .filter((item) => item.element)
+      .sort((a, b) => a.element.offsetTop - b.element.offsetTop)
+      .reduce((current, item) => {
+        if (item.element.offsetTop <= currentY) return item.id;
+        return current;
+      }, '#inicio');
   }
 
   function updateActiveLink(forcedHash) {
-    const currentY = window.scrollY + 130;
-    const sectionIds = Array.from(new Set([
-      '#inicio',
-      '#sobre',
-      '#recursos',
-      '#demonstracao',
-      '#indicacao',
-      '#contato'
-    ]));
-
-    let current = forcedHash || '#inicio';
-
-    if (!forcedHash) {
-      sectionIds.forEach((id) => {
-        const section = document.querySelector(id);
-        if (section && section.offsetTop <= currentY) current = id;
-      });
-    }
-
-    document.querySelectorAll('.site-menu > a[href^="#"]').forEach((link) => {
-      link.classList.toggle('active', link.getAttribute('href') === current);
-    });
-
-    setDropdownState(current);
+    const current = forcedHash || getCurrentSectionByPosition();
+    setActiveMenu(current);
 
     if (backToTop) backToTop.classList.toggle('visible', window.scrollY > 560);
   }

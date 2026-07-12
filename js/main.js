@@ -202,6 +202,9 @@
   function setActiveMenu(current) {
     clearMenuState();
 
+    const menuSections = ['#inicio', '#sobre', '#recursos', '#indicacao', '#contato'];
+    if (!menuSections.includes(current)) return;
+
     const topLink = document.querySelector(`.site-menu > a[href="${current}"]`);
     if (topLink) topLink.classList.add('active');
   }
@@ -209,17 +212,18 @@
   function getCurrentSectionByPosition() {
     const header = document.querySelector('.site-header');
     const headerHeight = header ? header.offsetHeight : 0;
-    const currentY = window.scrollY + headerHeight + 42;
+    const offset = headerHeight + 24;
     const sectionIds = ['#inicio', '#recursos', '#sobre', '#indicacao', '#demonstracao', '#contato'];
 
-    return sectionIds
-      .map((id) => ({ id, element: document.querySelector(id) }))
-      .filter((item) => item.element)
-      .sort((a, b) => a.element.offsetTop - b.element.offsetTop)
-      .reduce((current, item) => {
-        if (item.element.offsetTop <= currentY) return item.id;
-        return current;
-      }, '#inicio');
+    let current = '#inicio';
+    sectionIds.forEach((id) => {
+      const element = document.querySelector(id);
+      if (element && element.getBoundingClientRect().top <= offset) {
+        current = id;
+      }
+    });
+
+    return current;
   }
 
   function updateActiveLink(forcedHash) {

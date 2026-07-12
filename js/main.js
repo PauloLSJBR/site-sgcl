@@ -13,7 +13,8 @@
     const style = document.createElement('style');
     style.id = 'sgcl-menu-active-fix';
     style.textContent = `
-      .site-menu > a.active:after {
+      .site-menu > a.active:after,
+      .site-menu > a.access-active:after {
         display: none !important;
         content: none !important;
       }
@@ -25,6 +26,7 @@
       }
 
       .site-menu > a.active,
+      .site-menu > a.access-active,
       .menu-dropdown.is-current > .menu-dropdown-toggle {
         background: rgba(255,255,255,.1) !important;
         outline: 2px solid var(--yellow) !important;
@@ -44,6 +46,7 @@
 
       @media (max-width:820px) {
         .site-menu > a.active,
+        .site-menu > a.access-active,
         .menu-dropdown.is-current > .menu-dropdown-toggle {
           outline: 0 !important;
           color: var(--yellow) !important;
@@ -59,10 +62,10 @@
     if (!footerAccess) return;
 
     footerAccess.innerHTML = `
-      <h3>Acesso</h3>
-      <a href="https://sgcl.masterdaweb.net/" target="_blank" rel="noopener noreferrer" aria-label="Entrar no sistema SGCL">Entrar no SGCL</a>
-      <a href="acesso-aplicativos.html" aria-label="Ver opções de acesso ao SGCL">Outras opções de acesso</a>
-      <p class="small">Link principal para o sistema e página com acesso alternativo quando necessário.</p>
+      <h3>Acesso ao sistema</h3>
+      <p class="small">Já é cliente SGCL? Acesse o sistema em nuvem pelo link principal.</p>
+      <a href="https://sgcl.masterdaweb.net/" target="_blank" rel="noopener noreferrer" aria-label="Acessar o sistema SGCL agora">Acessar SGCL agora</a>
+      <a href="acesso-aplicativos.html" aria-label="Ver link alternativo de acesso ao SGCL">Ver link alternativo</a>
     `;
   }
 

@@ -8,6 +8,15 @@
   const toast = document.querySelector('.toast');
   const form = document.querySelector('#leadForm');
 
+  function loadSafeStyles() {
+    if (document.querySelector('link[data-sgcl-safe-fix="menu-card"]')) return;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'css/sgcl-menu-card-fix.css?v=1';
+    link.setAttribute('data-sgcl-safe-fix', 'menu-card');
+    document.head.appendChild(link);
+  }
+
   function showToast(message) {
     if (!toast) return;
     toast.textContent = message;
@@ -90,6 +99,8 @@
 
     if (backToTop) backToTop.classList.toggle('visible', window.scrollY > 560);
   }
+
+  loadSafeStyles();
 
   if (menuToggle && menu) {
     menuToggle.addEventListener('click', () => {

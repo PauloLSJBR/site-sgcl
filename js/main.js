@@ -13,6 +13,11 @@
     const style = document.createElement('style');
     style.id = 'sgcl-menu-active-fix';
     style.textContent = `
+      html, body {
+        max-width: 100%;
+        overflow-x: hidden !important;
+      }
+
       .site-menu > a.active:after,
       .site-menu > a.access-active:after {
         display: none !important;
@@ -44,6 +49,27 @@
         color: var(--blue-950) !important;
       }
 
+      @media (max-width:1180px) {
+        .nav-wrap {
+          gap: 12px !important;
+        }
+
+        .site-menu {
+          gap: 4px !important;
+          font-size: 14px !important;
+        }
+
+        .site-menu > a,
+        .menu-dropdown-toggle {
+          min-height: 40px !important;
+          padding: 0 10px !important;
+        }
+
+        .nav-cta {
+          display: none !important;
+        }
+      }
+
       @media (max-width:820px) {
         .site-menu > a.active,
         .site-menu > a.access-active,
@@ -63,8 +89,9 @@
 
     footerAccess.innerHTML = `
       <h3>Acesso ao sistema</h3>
-      <p class="small">Já é cliente SGCL? Acesse o sistema em nuvem pelo link principal.</p>
+      <p class="small">Já utiliza o SGCL? Acesse o ambiente em nuvem pelo link principal abaixo.</p>
       <a href="https://sgcl.masterdaweb.net/" target="_blank" rel="noopener noreferrer" aria-label="Acessar o sistema SGCL agora">Acessar SGCL agora</a>
+      <p class="small">Caso precise, consulte também a página com link alternativo de acesso.</p>
       <a href="acesso-aplicativos.html" aria-label="Ver link alternativo de acesso ao SGCL">Ver link alternativo</a>
     `;
   }

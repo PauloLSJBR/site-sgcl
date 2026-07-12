@@ -13,7 +13,13 @@
     const style = document.createElement('style');
     style.id = 'sgcl-menu-active-fix';
     style.textContent = `
-      .site-menu > a.active:after {
+      html, body {
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      .site-menu > a.active:after,
+      .site-menu > a.access-active:after {
         display: none !important;
         content: none !important;
       }
@@ -25,6 +31,7 @@
       }
 
       .site-menu > a.active,
+      .site-menu > a.access-active,
       .menu-dropdown.is-current > .menu-dropdown-toggle {
         background: rgba(255,255,255,.1) !important;
         outline: 2px solid var(--yellow) !important;
@@ -90,8 +97,38 @@
         font-weight: 950;
       }
 
+      .footer-access-primary {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        width: fit-content;
+        margin-top: 10px !important;
+        margin-bottom: 12px !important;
+        padding: 9px 13px;
+        border-radius: 10px;
+        background: var(--yellow);
+        color: var(--blue-950) !important;
+        font-weight: 900;
+      }
+
+      .footer-access-primary:hover {
+        background: var(--yellow-2);
+      }
+
+      .footer-access-secondary {
+        display: inline-flex !important;
+        width: fit-content;
+        color: var(--yellow) !important;
+        font-weight: 800;
+      }
+
+      .footer-access-secondary:hover {
+        color: var(--yellow-2) !important;
+      }
+
       @media (max-width:820px) {
         .site-menu > a.active,
+        .site-menu > a.access-active,
         .menu-dropdown.is-current > .menu-dropdown-toggle {
           outline: 0 !important;
           color: var(--yellow) !important;
@@ -114,6 +151,19 @@
       <li>Evolução contínua com suporte próximo.</li>
     `;
     quotePanel.appendChild(points);
+  }
+
+  function enhanceFooterAccess() {
+    const footerAccess = document.querySelector('.site-footer .footer-grid > div:last-child');
+    if (!footerAccess) return;
+
+    footerAccess.innerHTML = `
+      <h3>Acesso ao sistema</h3>
+      <p class="small">Já utiliza o SGCL? Acesse o ambiente em nuvem pelo link principal.</p>
+      <a class="footer-access-primary" href="https://sgcl.masterdaweb.net/" target="_blank" rel="noopener noreferrer" aria-label="Acessar o sistema SGCL agora">Acessar SGCL agora</a>
+      <p class="small">Caso precise, consulte também a página com link alternativo de acesso.</p>
+      <a class="footer-access-secondary" href="acesso-aplicativos.html" aria-label="Ver link alternativo de acesso ao SGCL">Ver link alternativo</a>
+    `;
   }
 
   function showToast(message) {
@@ -201,6 +251,7 @@
 
   applyMenuStyleFix();
   enhanceQuotePanel();
+  enhanceFooterAccess();
 
   if (menuToggle && menu) {
     menuToggle.addEventListener('click', () => {

@@ -202,14 +202,6 @@
   function setActiveMenu(current) {
     clearMenuState();
 
-    if (current === '#recursos' || current === '#demonstracao') {
-      if (dropdown) dropdown.classList.add('is-current');
-      if (dropdownToggle) dropdownToggle.classList.add('active');
-      const subLink = document.querySelector(`.menu-dropdown-panel a[href="${current}"]`);
-      if (subLink) subLink.classList.add('active');
-      return;
-    }
-
     const topLink = document.querySelector(`.site-menu > a[href="${current}"]`);
     if (topLink) topLink.classList.add('active');
   }

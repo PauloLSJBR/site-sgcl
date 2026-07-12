@@ -7,6 +7,46 @@
   <meta name="description" content="Acesso ao SGCL Lotérica em nuvem: link principal e alternativo." />
   <link rel="icon" href="assets/logo-sgcl.png" />
   <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .access-page-body { overflow-x: hidden; }
+    .access-page-body .nav-wrap { gap: 12px; }
+    .access-page-body .brand { min-width: 120px; }
+    .access-page-body .brand img { width: 98px; height: 54px; }
+    .access-page-body .site-menu { gap: 6px; font-size: 14px; }
+    .access-page-body .site-menu > a { padding: 0 11px; }
+    .access-page-body .nav-cta { padding: 13px 18px; font-size: 14px; }
+    .access-page-body .site-menu > a.active:after,
+    .access-page-body .site-menu > a.access-active:after { display: none !important; content: none !important; }
+    .access-page-body .site-menu > a.access-active {
+      background: rgba(255,255,255,.1) !important;
+      outline: 2px solid var(--yellow) !important;
+      outline-offset: 2px !important;
+      color: #fff !important;
+      box-shadow: none !important;
+    }
+    .footer-access-primary {
+      display: inline-flex !important;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      margin: 12px 0 10px !important;
+      padding: 9px 14px;
+      border-radius: 10px;
+      background: var(--yellow);
+      color: var(--blue-950) !important;
+      font-weight: 900;
+    }
+    .footer-access-secondary { color: var(--yellow) !important; font-weight: 800; }
+    @media (max-width: 1180px) {
+      .access-page-body .nav-wrap { gap: 9px; }
+      .access-page-body .site-menu { gap: 3px; font-size: 13px; }
+      .access-page-body .site-menu > a { padding: 0 8px; }
+      .access-page-body .nav-cta { padding: 12px 14px; font-size: 13px; }
+    }
+    @media (max-width: 980px) {
+      .access-page-body .nav-cta { display: none; }
+    }
+  </style>
 </head>
 <body class="access-page-body">
   <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
@@ -46,8 +86,33 @@
   </main>
 
   <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <img src="assets/logo-sgcl.png" alt="SGCL" />
+        <p>Sistema Gerencial Casa Lotérica. Solução especializada para controle operacional, financeiro e administrativo de Casas Lotéricas.</p>
+      </div>
+      <div>
+        <h3>Links</h3>
+        <a href="index.html#inicio">Home</a>
+        <a href="index.html#sobre">Sobre nós</a>
+        <a href="index.html#recursos">Produtos / SGCL</a>
+        <a href="index.html#demonstracao">Demonstração</a>
+        <a href="index.html#indicacao">Indicação</a>
+        <a href="index.html#contato">Contato</a>
+      </div>
+      <div>
+        <h3>Contato</h3>
+        <p>Uberlândia — MG<br />E-mail: sgclloterica@sgcl.com.br<br />WhatsApp: (34) 99200-7061<br />Site: www.sgcl.com.br</p>
+      </div>
+      <div>
+        <h3>Acesso ao sistema</h3>
+        <p class="small">Já utiliza o SGCL? Acesse o ambiente em nuvem pelo link principal.</p>
+        <a class="footer-access-primary" href="https://sgcl.masterdaweb.net/" target="_blank" rel="noopener noreferrer">Acessar SGCL agora</a>
+        <a class="footer-access-secondary" href="http://sgcl.masterdaweb.net/" target="_blank" rel="noopener noreferrer">Link alternativo de acesso</a>
+      </div>
+    </div>
     <div class="container copyright">© 2026 SGCL — Sistema Gerencial Casa Lotérica. Todos os direitos reservados.</div>
   </footer>
-  <script src="js/main.js?v=menu4"></script>
+  <script src="js/main.js?v=menu5"></script>
 </body>
 </html>
